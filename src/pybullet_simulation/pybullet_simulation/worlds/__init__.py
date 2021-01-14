@@ -1,4 +1,4 @@
-from simple_world import SimpleWorld
+from .simple_world import SimpleWorld
 
 def add_PyB_models_to_path():
     """
@@ -8,7 +8,7 @@ def add_PyB_models_to_path():
     import pybullet as pb
     import pybullet_data
     # pb.connect(pb.GUI)
-    print pybullet_data.getDataPath()
+    print(pybullet_data.getDataPath())
     pb.setAdditionalSearchPath(pybullet_data.getDataPath())
 
     # pb.resetSimulation()
