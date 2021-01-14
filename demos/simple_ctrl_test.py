@@ -1,12 +1,13 @@
 import numpy as np
 import pybullet as pb
-from pybullet_robot.worlds import SimpleWorld, add_PyB_models_to_path
-from pybullet_robot.robots import PandaArm
-from pybullet_robot.controllers import OSImpedanceController
+from pybullet_simulation.worlds import SimpleWorld, add_PyB_models_to_path
+from pybullet_robots.panda import PandaArm
+from pybullet_controllers import OSImpedanceController
 import time
+import os
 
 if __name__ == "__main__":
-    robot = PandaArm()
+    robot = PandaArm(robot_description=os.path.join(os.path.dirname(__file__), os.pardir, "models/panda_arm.urdf"))
 
     add_PyB_models_to_path()
 
@@ -28,7 +29,7 @@ if __name__ == "__main__":
 
     controller = OSImpedanceController(robot)
 
-    print "started"
+    print("started")
 
     z_traj = np.linspace(goal_pos[2], 0.34, 500)
 
@@ -44,7 +45,7 @@ if __name__ == "__main__":
         
         goal_pos[2] = z_traj[i]
 
-        print "Goal:", ee_pos, "Actual:", goal_pos
+        print("Goal:", ee_pos, "Actual:", goal_pos)
         controller.update_goal(goal_pos, goal_ori)
 
         elapsed = time.time() - now

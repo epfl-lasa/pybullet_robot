@@ -2,14 +2,10 @@ import os
 import time
 
 import numpy as np
-from pybullet_robot.bullet_robot import BulletRobot
+from pybullet_robots.bullet_robot import BulletRobot
 
 import logging
-from panda_robot_config import ROBOT_CONFIG
-
-description_path = os.path.dirname(
-    os.path.abspath(__file__)) + "/models/panda_arm.urdf"
-# print description_path
+from .panda_robot_config import ROBOT_CONFIG
 
 
 class PandaArm(BulletRobot):
@@ -59,7 +55,7 @@ class PandaArm(BulletRobot):
 
     """
 
-    def __init__(self, robot_description=description_path, config=ROBOT_CONFIG, uid=None, *args, **kwargs):
+    def __init__(self, robot_description, config=ROBOT_CONFIG, uid=None, *args, **kwargs):
         """
         :param robot_description: path to description file (urdf, .bullet, etc.)
         :param config: optional config file for specifying robot information 

@@ -1,12 +1,13 @@
 from collections import deque
 import numpy as np
 import pybullet as pb
-from pybullet_robot.worlds import SimpleWorld, add_PyB_models_to_path
-from pybullet_robot.robots import PandaArm
-from pybullet_robot.controllers import OSHybridController
+from pybullet_simulation.worlds import SimpleWorld, add_PyB_models_to_path
+from pybullet_robots.panda import PandaArm
+from pybullet_controllers import OSHybridController
 import time
 import matplotlib.pyplot as plt
 import threading
+import os
 
 
 def plot_thread():
@@ -24,7 +25,7 @@ def plot_thread():
             break
 
 if __name__ == "__main__":
-    robot = PandaArm()
+    robot = PandaArm(robot_description=os.path.join(os.path.dirname(__file__), os.pardir, "models/panda_arm.urdf"))
 
     add_PyB_models_to_path()
 
