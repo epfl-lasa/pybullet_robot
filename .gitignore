@@ -1,3 +1,7 @@
 *.py[cod]
 venv
 
+# pipenv stuff
+*.egg-info
+*.lock
+*.toml
