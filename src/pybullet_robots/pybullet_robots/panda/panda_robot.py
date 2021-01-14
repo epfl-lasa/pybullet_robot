@@ -2,7 +2,7 @@ import os
 import time
 
 import numpy as np
-from pybullet_robots.bullet_robot import BulletRobot
+from pybullet_robots import BulletRobot
 
 import logging
 from .panda_robot_config import ROBOT_CONFIG
