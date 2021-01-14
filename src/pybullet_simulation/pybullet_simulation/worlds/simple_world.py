@@ -6,7 +6,6 @@ import time
 class WorldObjects(object):
 
     def __init__(self, object_dict={}):
-
         for k in object_dict:
             setattr(self, k, object_dict[k])
 
@@ -44,11 +43,11 @@ class SimpleWorld(object):
     def add_objects(self, objects):
 
         for k in objects:
-            print ("Adding", k)
+            print("Adding", k)
             if not hasattr(self._other_objects, k):
                 self._other_objects[k] = objects[k]
             else:
-                print (
+                print(
                     "Object with keyname '{}' already present. Not adding to world.".format(k))
 
     def remove_objects(self, objects=[]):

@@ -9,7 +9,6 @@ from .panda_robot_config import ROBOT_CONFIG
 
 
 class PandaArm(BulletRobot):
-
     """
     Bullet simulation interface for the Franka Panda Emika robot
 
@@ -77,7 +76,7 @@ class PandaArm(BulletRobot):
                            for joint_name in self._joint_names]
 
         self._tuck = [-0.017792060227770554, -0.7601235411041661, 0.019782607023391807, -
-                      2.342050140544315, 0.029840531355804868, 1.5411935298621688, 0.7534486589746342]
+        2.342050140544315, 0.029840531355804868, 1.5411935298621688, 0.7534486589746342]
 
         self._untuck = self._tuck
 
@@ -208,6 +207,5 @@ class PandaArm(BulletRobot):
 
 
 if __name__ == '__main__':
-
     p = PandaArm(realtime_sim=True)
     # pass
