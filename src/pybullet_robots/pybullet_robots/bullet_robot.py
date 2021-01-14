@@ -86,7 +86,7 @@ class BulletRobot(object):
             self._ft_joints.remove(joint_id)
         elif joint_id not in self._ft_joints and enable:
             self._ft_joints.append(joint_id)
-        print ("FT sensor at joint", joint_id)
+        print("FT sensor at joint", joint_id)
         pb.enableJointForceTorqueSensor(self._id, joint_id, enable, self._uid)
 
     def __del__(self):
@@ -95,7 +95,7 @@ class BulletRobot(object):
     def _use_last_defined_link(self):
         joint_information = pb.getJointInfo(
             self._id, self._all_joints[-1], physicsClientId=self._uid)
-        return joint_information[-1]+1, joint_information[-5]
+        return joint_information[-1] + 1, joint_information[-5]
 
     def state(self):
         """
@@ -169,7 +169,8 @@ class BulletRobot(object):
                                                                  objPositions=joint_angles.tolist(),
                                                                  objVelocities=np.zeros(
                                                                      self.n_joints()).tolist(),
-                                                                 objAccelerations=np.zeros(self.n_joints()).tolist(), physicsClientId=self._uid)
+                                                                 objAccelerations=np.zeros(self.n_joints()).tolist(),
+                                                                 physicsClientId=self._uid)
 
         jacobian = np.vstack(
             [np.array(linear_jacobian), np.array(angular_jacobian)])
@@ -192,13 +193,13 @@ class BulletRobot(object):
         """
 
         return self.get_link_velocity(link_id=self._ee_link_idx)
-    
+
     def get_link_state(self, link_idx, as_tuple=False):
         """
         returns orientation in bullet format quaternion [x,y,z,w]
         """
 
-        link_state = pb.getLinkState(self._id, link_idx, computeLinkVelocity = 1, physicsClientId=self._uid)
+        link_state = pb.getLinkState(self._id, link_idx, computeLinkVelocity=1, physicsClientId=self._uid)
 
         if not as_tuple:
             ee_pos = np.asarray(link_state[0])
@@ -222,14 +223,15 @@ class BulletRobot(object):
         '''
 
         _, _, jnt_reaction_force, _ = self.get_joint_state(self._ft_joints[-1])
-        
+
         if not local:
             jnt_reaction_force = np.asarray(jnt_reaction_force)
             ee_pos, ee_ori = self.get_link_pose(self._ft_joints[-1])
             rot_mat = quaternion.as_rotation_matrix(ee_ori)
-            f = np.dot(rot_mat,np.asarray([-jnt_reaction_force[0], -jnt_reaction_force[1], -jnt_reaction_force[2]]))
-            t = np.dot(rot_mat,np.asarray([-jnt_reaction_force[0+3], -jnt_reaction_force[1+3], -jnt_reaction_force[2+3]]))
-            jnt_reaction_force = np.append(f,t).flatten()
+            f = np.dot(rot_mat, np.asarray([-jnt_reaction_force[0], -jnt_reaction_force[1], -jnt_reaction_force[2]]))
+            t = np.dot(rot_mat,
+                       np.asarray([-jnt_reaction_force[0 + 3], -jnt_reaction_force[1 + 3], -jnt_reaction_force[2 + 3]]))
+            jnt_reaction_force = np.append(f, t).flatten()
 
         return jnt_reaction_force
 
@@ -612,18 +614,19 @@ class BulletRobot(object):
         if ctrl_type == 'pos':
 
             pb.setJointMotorControlArray(self._id, self._movable_joints, pb.POSITION_CONTROL,
-                                         targetPosition=angles, forces=[500]*len(self._movable_joints), physicsClientId=self._uid)
+                                         targetPosition=angles, forces=[500] * len(self._movable_joints),
+                                         physicsClientId=self._uid)
 
         else:
             pb.setJointMotorControlArray(self._id, self._movable_joints, pb.VELOCITY_CONTROL,
-                                         forces=[0.0]*len(self._movable_joints), physicsClientId=self._uid)
+                                         forces=[0.0] * len(self._movable_joints), physicsClientId=self._uid)
 
     def triangle_mesh(self):
 
         visual_shape_data = pb.getVisualShapeData(
             self._id, physicsClientId=self._uid)
 
-        triangle_mesh = [None]*len(visual_shape_data)
+        triangle_mesh = [None] * len(visual_shape_data)
 
         for i, data in enumerate(visual_shape_data):
             link_index = data[1]
@@ -665,6 +668,6 @@ class BulletRobot(object):
         import os
         if os.path.isdir(path):
             pb.setAdditionalSearchPath(path)
-            print ("Info: Added {} to Pybullet path.".format(path))
+            print("Info: Added {} to Pybullet path.".format(path))
         else:
-            print ("Error adding to Pybullet path! {} not a directory.".format(path))
+            print("Error adding to Pybullet path! {} not a directory.".format(path))

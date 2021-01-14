@@ -8,13 +8,12 @@ class OSControllerBase(object):
 
     def __init__(self, robot, config, break_condition=None):
 
-        self._robot = robot # robot sim should not be in real-time. Step simulation will be called by controller.
+        self._robot = robot  # robot sim should not be in real-time. Step simulation will be called by controller.
         self._P_pos = np.diag(config['P_pos'])
         self._D_pos = np.diag(config['D_pos'])
 
         self._P_ori = np.diag(config['P_ori'])
         self._D_ori = np.diag(config['D_ori'])
-
 
         self._error_thresh = config['error_thresh']
         self._start_err = config['start_err']
@@ -35,7 +34,7 @@ class OSControllerBase(object):
         self._sim_time = 0.0
 
         if 'rate' not in config:
-            self._ctrl_rate = 1./self._sim_timestep
+            self._ctrl_rate = 1. / self._sim_timestep
         else:
             self._ctrl_rate = float(config['rate'])
 
@@ -69,10 +68,10 @@ class OSControllerBase(object):
             error = self._start_err
             while np.any(error > self._error_thresh):
                 now = time.time()
-                
+
                 self._mutex.acquire()
                 tau, error = self._compute_cmd()
-                
+
                 # command robot using the computed joint torques
                 self._robot.exec_torque_cmd(tau)
 
@@ -82,7 +81,7 @@ class OSControllerBase(object):
 
                 # self._rate.sleep()
                 elapsed = time.time() - now
-                sleep_time = (1./self._ctrl_rate) - elapsed
+                sleep_time = (1. / self._ctrl_rate) - elapsed
                 if sleep_time > 0.0:
                     time.sleep(sleep_time)
 
@@ -105,4 +104,3 @@ class OSControllerBase(object):
 
     def __del__(self):
         self.stop_controller_thread()
-

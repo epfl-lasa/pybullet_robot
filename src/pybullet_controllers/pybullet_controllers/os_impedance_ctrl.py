@@ -3,15 +3,15 @@ from pybullet_controllers.utils import quatdiff_in_euler
 from pybullet_controllers.os_controller import OSControllerBase
 from pybullet_controllers.ctrl_config import OSImpConfig
 
+
 class OSImpedanceController(OSControllerBase):
 
     def __init__(self, robot, config=OSImpConfig, **kwargs):
-
         OSControllerBase.__init__(self, robot=robot, config=config, **kwargs)
 
     def update_goal(self, goal_pos, goal_ori):
         self._mutex.acquire()
-        self._goal_pos = np.asarray(goal_pos).reshape([3,1])
+        self._goal_pos = np.asarray(goal_pos).reshape([3, 1])
         self._goal_ori = np.asarray(goal_ori)
         self._mutex.release()
 
@@ -43,7 +43,4 @@ class OSImpedanceController(OSControllerBase):
         return np.dot(J.T, F).flatten(), error
 
     def _initialise_goal(self):
-        self.update_goal(self._robot.ee_pose()[0],self._robot.ee_pose()[1])
-
-
-
+        self.update_goal(self._robot.ee_pose()[0], self._robot.ee_pose()[1])
