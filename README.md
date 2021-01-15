@@ -2,11 +2,57 @@
 
 ## Usage
 
+### Preparation
+
+If you dont have `pip3` and `pipenv` installed on your machine yet, do so:
+
+```bash
+sudo apt install python3-pip
+python3 -m pip install --user pipenv
+```
+
+Additionally, run the following command to add the user base's binary directory to your `PATH` environmental variable:
+
+```bash
+echo 'export PATH="${HOME}/.local/bin:$PATH"' >> ~/.bashrc
+```
+
+, or,
+
+```bash
+echo 'export PATH="${HOME}/.local/bin:$PATH"' >> ~/.zshrc
+```
+
+Then, restart your shell.
+
+### Setup pipenv
+
+To create the pipenv for this project, run
+
 ```bash
 git clone git@github.com:epfl-lasa/pybullet_robot.git
 cd pybullet_robot
-bash setup_pipenv.sh
-python3 demos/simple_ctrl_test.py
+pipenv install
+```
+
+### Running scripts
+
+Run your scripts using the command
+
+```bash
+pipenv run [some command]
+```
+
+, e.g.
+
+```bash
+pipenv run demos/simple_ctrl_test.py
+```
+
+or if the `demos/simple_ctrl_test.py` is declared as script in the Pipfile,
+
+```bash
+pipenv run simple_ctrl_test
 ```
 
 # PyBullet ROBOT

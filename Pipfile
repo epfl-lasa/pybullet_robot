@@ -19,3 +19,7 @@ pybullet-simulation = {path = "./src/pybullet_simulation"}
 
 [requires]
 python_version = "3.6"
+
+[scripts]
+simple_ctrl_test = "python3 demos/simple_ctrl_test.py"
+hyb_ctrl_test = "python3 demos/hyb_ctrl_test.py"
