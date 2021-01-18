@@ -118,14 +118,10 @@ class BulletRobot(object):
                        }
         """
 
-        joint_angles = self.angles()
-        joint_velocities = self.joint_velocities()
-        joint_efforts = self.joint_efforts()
-
         state = {}
-        state['position'] = joint_angles
-        state['velocity'] = joint_velocities
-        state['effort'] = joint_efforts
+        state['position'] = self.angles()
+        state['velocity'] = self.joint_velocities()
+        state['effort'] = self.joint_efforts()
         state['jacobian'] = self.jacobian(None)
         state['inertia'] = self.inertia(None)
 
