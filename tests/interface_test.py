@@ -45,6 +45,10 @@ if __name__ == "__main__":
     while True:
         now = time.time()
         state = world.robot.state()
+
+        # set unique values in all fields to check integrity of the communication because it's
+        # important to check that conventions (column-major/row-major, quaternion, twist
+        # force/torque) are the same in the simulation interface (python) and the control (cpp)
         for i, key in enumerate(state):
             if key is 'ee_ori':
                 state[key].w = 1
@@ -71,7 +75,7 @@ if __name__ == "__main__":
         command_message = interface.poll()
         if command_message:
             command = interface.get_command(command_message)
-            # print(command)
+            print("Command received: " + command)
 
         elapsed = time.time() - now
         sleep_time = (1. / desired_frequency) - elapsed
