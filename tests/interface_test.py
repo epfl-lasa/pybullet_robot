@@ -75,7 +75,7 @@ if __name__ == "__main__":
         command_message = interface.poll()
         if command_message:
             command = interface.get_command(command_message)
-            print("Command received: " + command)
+            print(command)
 
         elapsed = time.time() - now
         sleep_time = (1. / desired_frequency) - elapsed
