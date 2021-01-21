@@ -4,7 +4,7 @@ import quaternion
 
 
 class BulletRobot(object):
-    def __init__(self, description_path, uid=None, config=None, realtime_sim=False):
+    def __init__(self, description_path, uid, config=None, realtime_sim=False):
         """
         :param description_path: path to description file (urdf, .bullet, etc.)
         :param config: optional config file for specifying robot information 
@@ -14,14 +14,7 @@ class BulletRobot(object):
         :type config: dict
         :type uid: int
         """
-
-        if uid is None:
-            uid = pb.connect(pb.GUI)
-        #     uid = pb.connect(pb.SHARED_MEMORY)
-        #     if uid < 0:
-
         self._uid = uid
-        pb.resetSimulation(physicsClientId=self._uid)
 
         extension = description_path.split('.')[-1]
         if extension == "urdf":
@@ -401,7 +394,7 @@ class BulletRobot(object):
 
         joint_information = []
         for idx in self._all_joints:
-            info = pb.getJointInfo(self._uid, idx, physicsClientId=self._uid)
+            info = pb.getJointInfo(self._id, idx, physicsClientId=self._uid)
             joint_information.append(dict(zip(attribute_list, info)))
 
         return joint_information
