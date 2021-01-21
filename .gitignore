@@ -4,3 +4,6 @@ venv
 # pipenv stuff
 *.egg-info
 *.toml
+
+# pycharm
+.idea

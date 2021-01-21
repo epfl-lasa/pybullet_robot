@@ -1,6 +1,6 @@
 import numpy as np
-import pybullet as pb
-from pybullet_simulation.worlds import SimpleWorld, add_PyB_models_to_path
+from pybullet_simulation import Simulation
+from pybullet_simulation.worlds import EmptyWorld
 from pybullet_robots.panda import PandaArm
 import time
 from pybullet_interfaces.franka_zmq_simulation_interface import FrankaZMQSimulationInterface
@@ -10,33 +10,33 @@ if __name__ == "__main__":
     # create interface with default state_uri and command_uri
     interface = FrankaZMQSimulationInterface()
 
-    robot = PandaArm(robot_description=os.path.join(os.path.dirname(__file__), os.pardir, "models/panda_arm.urdf"))
-    # print(robot._uid)
-    # print(robot._id)
-    # print(robot._rt_sim)
-    # print(robot._all_joints)
-    # print(robot._movable_joints)
-    # print(robot._nu)
-    # print(robot._nq)
-    # print(robot._all_joint_names)
-    # print(robot._all_joint_dict)
-    # print(robot._ee_link_idx)
-    # print(robot._ee_link_name)
-    # print(robot._joint_limits)
-    # print(robot._ft_joints)
+    simulation = Simulation(realtime_sim=False)
+    simulation.add_PyB_models_path()
 
-    add_PyB_models_to_path()
+    world = EmptyWorld(simulation.uid, add_plane=True)
+    world.add_object_from_urdf('table', 'table/table.urdf', position_xyz=[0.4, 0., 0.0],
+                               orientation_wxyz=[0, 0, -0.707, 0.707], scaling=0.5, fixed_base=True)
 
-    plane = pb.loadURDF('plane.urdf')
-    table = pb.loadURDF('table/table.urdf',
-                        useFixedBase=True, globalScaling=0.5)
-    pb.resetBasePositionAndOrientation(
-        table, [0.4, 0., 0.0], [0, 0, -0.707, 0.707])
+    robot = PandaArm(robot_description=os.path.join(os.path.dirname(__file__), os.pardir, "models/panda_arm.urdf"),
+                     uid=simulation.uid)
+    timeout = time.time() + 2
+    while time.time() < timeout:
+        robot.tuck()
+        simulation.step()
 
-    objects = {'plane': plane,
-               'table': table}
-
-    world = SimpleWorld(robot, objects)
+    print(robot._uid)
+    print(robot._id)
+    print(robot._rt_sim)
+    print(robot._all_joints)
+    print(robot._movable_joints)
+    print(robot._nu)
+    print(robot._nq)
+    print(robot._all_joint_names)
+    print(robot._all_joint_dict)
+    print(robot._ee_link_idx)
+    print(robot._ee_link_name)
+    print(robot._joint_limits)
+    print(robot._ft_joints)
 
     desired_frequency = 500.
 
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     k = 0
     while True:
         now = time.time()
-        state = world.robot.state()
+        state = robot.state()
 
         # set unique values in all fields to check integrity of the communication because it's
         # important to check that conventions (column-major/row-major, quaternion, twist
@@ -75,7 +75,7 @@ if __name__ == "__main__":
         command_message = interface.poll()
         if command_message:
             command = interface.get_command(command_message)
-            print(command)
+            # print(command)
 
         elapsed = time.time() - now
         sleep_time = (1. / desired_frequency) - elapsed

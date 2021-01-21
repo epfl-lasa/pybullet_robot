@@ -1,1 +1,1 @@
-from .worlds import SimpleWorld
+from .simulation import Simulation
