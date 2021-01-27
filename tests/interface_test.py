@@ -72,10 +72,13 @@ if __name__ == "__main__":
                     state[key][5, 6] = 10.
 
         interface.send(state)
-        command_message = interface.poll()
-        if command_message:
-            command = interface.get_command(command_message)
-            # print(command)
+        interface.poll_command()
+        if interface.first_message_received:
+            if interface.timeout_triggered:
+                pass
+            else:
+                command = interface.current_command
+                print(command)
 
         elapsed = time.time() - now
         sleep_time = (1. / desired_frequency) - elapsed
