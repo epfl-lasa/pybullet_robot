@@ -13,17 +13,13 @@ class BulletRobotDescription(object):
         - get_all_joints
         - get_joint_names
         - get_link_names
-        - _find_joint_info
         - get_joint_dict
         - get_joint_index_by_name
         - get_link_dict
         - get_link_index_by_name
-        - _find_movable_joints
         - get_movable_joints
         - get_nb_movable_joints
         - get_ft_sensor_joints
-        - _use_last_defined_link
-        - _find_joint_position_limits
         - get_joint_position_limits
         - get_joint_velocity_limits
         - get_joint_effort_limits
@@ -31,7 +27,6 @@ class BulletRobotDescription(object):
         - set_ft_sensor_at
         - set_default_joint_positions
         - get_default_joint_positions
-        - _set_base_pose
         - get_base_pos_ori
     """
 

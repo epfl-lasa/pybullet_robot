@@ -2,6 +2,15 @@ import pybullet as pb
 
 
 class Simulation(object):
+    """
+    The Simulation class creates the PyBullet physics server and GUI.
+
+    Available methods (for usage, see documentation at function definition):
+        - is_alive
+        - step
+        - add_robot_models_path
+        - add_PyB_models_path
+    """
 
     def __init__(self, realtime_sim=False, realtime_sim_freq=500.0):
         """

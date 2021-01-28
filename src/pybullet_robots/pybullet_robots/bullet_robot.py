@@ -17,7 +17,6 @@ class BulletRobot(BulletRobotDescription):
         - set_enforce_joint_limits
         - enable
         - disable
-        - _emergency_stop
         - check_robot_state
         - get_state
         - get_joint_positions
@@ -34,7 +33,6 @@ class BulletRobot(BulletRobotDescription):
         - set_joint_positions_cmd
         - set_joint_velocities_cmd
         - set_joint_torques_cmd
-        - _check_joint_command
         - goto_default_joint_positions
     """
 
