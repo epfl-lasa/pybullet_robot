@@ -42,7 +42,7 @@ if __name__ == "__main__":
 
     start = time.time()
     k = 0
-    while True:
+    while simulation.is_alive():
         now = time.time()
         state = robot.state()
 
@@ -72,12 +72,12 @@ if __name__ == "__main__":
                     state[key][5, 6] = 10.
 
         interface.send(state)
-        interface.poll_command()
+        command = interface.poll_command()
         if interface.first_message_received:
             if interface.timeout_triggered:
+                # TODO handle connection timeout
                 pass
             else:
-                command = interface.current_command
                 print(command)
 
         elapsed = time.time() - now

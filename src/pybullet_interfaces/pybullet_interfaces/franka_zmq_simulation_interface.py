@@ -15,11 +15,7 @@ class FrankaZMQSimulationInterface(object):
     Available methods (for usage, see documentation at function definition):
         - send
         - receive
-        - _poll
         - poll_command
-        - _get_state_as_list
-        - _decode_command
-        - _encode_state
     """
 
     def __init__(self, state_uri="0.0.0.0:5550", command_uri="0.0.0.0:5551", command_timeout=0.5, datatype='d'):
@@ -102,6 +98,9 @@ class FrankaZMQSimulationInterface(object):
         Receive message from ZMQ socket and decode it into a command message. If no new messages have been received
         over a defined time horizon, a timeout is triggered. The command is available at self.current_command and the
         timeout flag at self.timeout_triggered.
+
+        :return: Current command
+        :rtype: list of float
         """
         message = self._poll()
         if message:
@@ -113,6 +112,7 @@ class FrankaZMQSimulationInterface(object):
         elif self.first_message_received and time.time() - self._last_command > self._command_timeout:
             self.current_command = [0] * 7
             self.timeout_triggered = True
+        return self.current_command
 
     @staticmethod
     def _get_state_as_list(state=None):
