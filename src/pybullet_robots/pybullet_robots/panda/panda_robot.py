@@ -54,7 +54,7 @@ class PandaArm(BulletRobot):
 
     """
 
-    def __init__(self, robot_description, config=ROBOT_CONFIG, uid=None, *args, **kwargs):
+    def __init__(self, robot_description, uid, enforce_joint_limits=False, config=None):
         """
         :param robot_description: path to description file (urdf, .bullet, etc.)
         :param config: optional config file for specifying robot information 
@@ -68,7 +68,11 @@ class PandaArm(BulletRobot):
 
         self._joint_names = ['panda_joint%s' % (s,) for s in range(1, 8)]
 
-        BulletRobot.__init__(self, robot_description, uid=uid, **kwargs)
+        BulletRobot.__init__(self, robot_description, uid=uid, enforce_joint_limits=enforce_joint_limits, config=config)
+
+        # by default, set FT sensor at last fixed joint
+        self._ft_joints = [self._all_joints[-1]]
+        self.set_ft_sensor_at(self._ft_joints[0])
 
         all_joint_dict = self.get_joint_dict()
 
@@ -80,8 +84,8 @@ class PandaArm(BulletRobot):
 
         self._untuck = self._tuck
 
-        lower_limits = self.get_joint_limits()['lower'][self._joint_ids]
-        upper_limits = self.get_joint_limits()['upper'][self._joint_ids]
+        lower_limits = self.get_joint_position_limits()['upper']
+        upper_limits = self.get_joint_position_limits()['lower']
 
         self._jnt_limits = [{'lower': x[0], 'upper': x[1]}
                             for x in zip(lower_limits, upper_limits)]
@@ -98,7 +102,7 @@ class PandaArm(BulletRobot):
         :type cmd: [float] len: self._nu
 
         """
-        self.set_joint_positions(cmd, self._joint_ids)
+        self.set_joint_positions_cmd(cmd, self._joint_ids)
 
     def exec_position_cmd_delta(self, cmd):
         """
@@ -108,7 +112,7 @@ class PandaArm(BulletRobot):
         :type cmd: [float] len: self._nu
 
         """
-        self.set_joint_positions(self.angles() + cmd, self._joint_ids)
+        self.set_joint_positions_cmd(self.angles() + cmd, self._joint_ids)
 
     def move_to_joint_position(self, cmd):
         """
@@ -118,7 +122,7 @@ class PandaArm(BulletRobot):
         :type cmd: [float] len: self._nu
 
         """
-        self.exec_position_cmd(cmd)
+        self.reset_joint_positions(cmd)
 
     def move_to_joint_pos_delta(self, cmd):
         """
@@ -138,7 +142,7 @@ class PandaArm(BulletRobot):
         :type cmd: [float] len: self._nu
 
         """
-        self.set_joint_velocities(cmd, self._joint_ids)
+        self.set_joint_velocities_cmd(cmd, self._joint_ids)
 
     def exec_torque_cmd(self, cmd):
         """
@@ -148,7 +152,7 @@ class PandaArm(BulletRobot):
         :type cmd: [float] len: self._nu
 
         """
-        self.set_joint_torques(cmd, self._joint_ids)
+        self.set_joint_torques_cmd(cmd, self._joint_ids)
 
     def position_ik(self, position, orientation=None):
         """
