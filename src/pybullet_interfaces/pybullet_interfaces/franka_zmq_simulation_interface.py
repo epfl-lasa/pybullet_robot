@@ -126,10 +126,10 @@ class FrankaZMQSimulationInterface(object):
         :rtype: list of float
         """
         state_list = []
-        state_list.extend(list(state['position']))
-        state_list.extend(list(state['velocity']))
-        state_list.extend(list(state['effort']))
-        state_list.extend(list(state['ee_point']))
+        state_list.extend(list(state['joint_pos']))
+        state_list.extend(list(state['joint_vel']))
+        state_list.extend(list(state['joint_eff']))
+        state_list.extend(list(state['ee_pos']))
         state_list.extend(quaternion.as_float_array(state['ee_ori']))
         state_list.extend(list(state['ee_vel']))
         state_list.extend(list(state['ee_omg']))

@@ -19,18 +19,12 @@ if __name__ == "__main__":
 
     robot = PandaArm(robot_description=os.path.join(os.path.dirname(__file__), os.pardir, "models/panda_arm.urdf"),
                      uid=simulation.uid)
-    timeout = time.time() + 2
-    while time.time() < timeout:
-        robot.tuck()
-        simulation.step()
 
     print(robot._uid)
     print(robot._id)
-    print(robot._rt_sim)
     print(robot._all_joints)
     print(robot._movable_joints)
-    print(robot._nu)
-    print(robot._nq)
+    print(robot._nb_movable_joints)
     print(robot._all_joint_names)
     print(robot._all_joint_dict)
     print(robot._ee_link_idx)
@@ -44,7 +38,7 @@ if __name__ == "__main__":
     k = 0
     while simulation.is_alive():
         now = time.time()
-        state = robot.state()
+        state = robot.get_state()
 
         # set unique values in all fields to check integrity of the communication because it's
         # important to check that conventions (column-major/row-major, quaternion, twist
