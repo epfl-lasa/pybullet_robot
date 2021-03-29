@@ -10,12 +10,12 @@ pybullet = "*"
 numba = "*"
 scipy = "*"
 zmq = "*"
-
-[dev-packages]
 pybullet-controllers = {path = "./src/pybullet_controllers"}
 pybullet-simulation = {path = "./src/pybullet_simulation"}
 pybullet-interfaces = {path = "./src/pybullet_interfaces"}
 pybullet-robots = {path = "./src/pybullet_robots"}
+
+[dev-packages]
 
 [requires]
 python_version = "3.8"
