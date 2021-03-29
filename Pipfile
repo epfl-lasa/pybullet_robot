@@ -4,13 +4,10 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-matplotlib = "==3.3.3"
-numpy = "==1.19.5"
-numpy-quaternion = "==2020.11.2.17.0.49"
-pybullet = "==3.0.8"
-scipy = "==1.5.4"
-numba = "*"
-zmq = "==0.0.0"
+numpy = "*"
+numpy-quaternion = "*"
+pybullet = "*"
+zmq = "*"
 pybullet-controllers = {path = "./src/pybullet_controllers"}
 pybullet-robots = {path = "./src/pybullet_robots"}
 pybullet-simulation = {path = "./src/pybullet_simulation"}
@@ -19,9 +16,7 @@ pybullet-interfaces = {path = "./src/pybullet_interfaces"}
 [dev-packages]
 
 [requires]
-python_version = "3.6"
+python_version = "3.8"
 
 [scripts]
-simple_ctrl_test = "python3 demos/simple_ctrl_test.py"
-hyb_ctrl_test = "python3 demos/hyb_ctrl_test.py"
 zmq_interface_test = "python3 tests/interface_test.py"
