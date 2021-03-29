@@ -18,6 +18,7 @@ if __name__ == "__main__":
     if not simulation.add_robot_models_path(os.path.join(os.path.dirname(__file__), os.pardir, "models")):
         exit(1)
     robot = BulletRobot(robot_urdf="panda_arm.urdf", enforce_joint_limits=True, uid=simulation.uid)
+    print(robot.get_joint_names())
     # Test some bullet_robot_description methods
     robot.set_default_joint_positions([-0.017792060227770554, -0.7601235411041661, 0.019782607023391807,
                                        -2.342050140544315, 0.029840531355804868, 1.5411935298621688,

@@ -49,24 +49,24 @@ class PandaArm(BulletRobot):
         - set_ctrl_mode*
 
         *These methods can be accessed using the self._bullet_robot object from this class.
-         Documentation for these methods in BulletRobot class. Refer bullet_robot.py       
-
-
+         Documentation for these methods in BulletRobot class. Refer bullet_robot.py
     """
 
     def __init__(self, robot_description, uid, enforce_joint_limits=False, config=None):
         """
-        :param robot_description: path to description file (urdf, .bullet, etc.)
-        :param config: optional config file for specifying robot information 
-        :param uid: optional server id of bullet 
+        Constructor of the Panda robot class.
 
-        :type robot_description: str
-        :type config: dict
+        :param robot_urdf: robot description file (urdf, .bullet, etc.)
+        :param enforce_joint_limits: Enforce joint limits or not
+        :param uid: server id of PyBullet
+        :param config: optional config file for specifying robot information
+
+        :type robot_urdf: str
+        :type enforce_joint_limits: bool
         :type uid: int
+        :type config: dict
         """
         self._ready = False
-
-        self._joint_names = ['panda_joint%s' % (s,) for s in range(1, 8)]
 
         BulletRobot.__init__(self, robot_description, uid=uid, enforce_joint_limits=enforce_joint_limits, config=config)
 
@@ -74,22 +74,9 @@ class PandaArm(BulletRobot):
         self._ft_joints = [self._all_joints[-1]]
         self.set_ft_sensor_at(self._ft_joints[0])
 
-        all_joint_dict = self.get_joint_dict()
-
-        self._joint_ids = [all_joint_dict[joint_name]
-                           for joint_name in self._joint_names]
-
-        self._tuck = [-0.017792060227770554, -0.7601235411041661, 0.019782607023391807, -
-        2.342050140544315, 0.029840531355804868, 1.5411935298621688, 0.7534486589746342]
-
+        self._tuck = [-0.017792060227770554, -0.7601235411041661, 0.019782607023391807, -2.342050140544315,
+                      0.029840531355804868, 1.5411935298621688, 0.7534486589746342]
         self._untuck = self._tuck
-
-        lower_limits = self.get_joint_position_limits()['upper']
-        upper_limits = self.get_joint_position_limits()['lower']
-
-        self._jnt_limits = [{'lower': x[0], 'upper': x[1]}
-                            for x in zip(lower_limits, upper_limits)]
-
         self.move_to_joint_position(self._tuck)
 
         self._ready = True
@@ -102,7 +89,7 @@ class PandaArm(BulletRobot):
         :type cmd: [float] len: self._nu
 
         """
-        self.set_joint_positions_cmd(cmd, self._joint_ids)
+        self.set_joint_positions_cmd(cmd, self.get_movable_joints())
 
     def exec_position_cmd_delta(self, cmd):
         """
@@ -112,7 +99,7 @@ class PandaArm(BulletRobot):
         :type cmd: [float] len: self._nu
 
         """
-        self.set_joint_positions_cmd(self.angles() + cmd, self._joint_ids)
+        self.set_joint_positions_cmd(self.angles() + cmd, self.get_movable_joints())
 
     def move_to_joint_position(self, cmd):
         """
@@ -142,7 +129,7 @@ class PandaArm(BulletRobot):
         :type cmd: [float] len: self._nu
 
         """
-        self.set_joint_velocities_cmd(cmd, self._joint_ids)
+        self.set_joint_velocities_cmd(cmd, self.get_movable_joints())
 
     def exec_torque_cmd(self, cmd):
         """
@@ -152,7 +139,7 @@ class PandaArm(BulletRobot):
         :type cmd: [float] len: self._nu
 
         """
-        self.set_joint_torques_cmd(cmd, self._joint_ids)
+        self.set_joint_torques_cmd(cmd, self.get_movable_joints())
 
     def position_ik(self, position, orientation=None):
         """
@@ -186,20 +173,6 @@ class PandaArm(BulletRobot):
         """
         self.exec_position_cmd(self._tuck)
 
-    def joint_limits(self):
-        """
-        :return: Joint limits
-        :rtype: dict {'lower': ndarray, 'upper': ndarray}
-        """
-        return self._jnt_limits
-
-    def joint_names(self):
-        """
-        :return: Name of all joints
-        :rtype: [str] * self._nq
-        """
-        return self._joint_names
-
     @staticmethod
     def load_robot_models():
         """
@@ -208,8 +181,3 @@ class PandaArm(BulletRobot):
         import os
         BulletRobot.add_to_models_path(os.path.dirname(
             os.path.abspath(__file__)) + "/models")
-
-
-if __name__ == '__main__':
-    p = PandaArm(realtime_sim=True)
-    # pass

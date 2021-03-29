@@ -38,7 +38,7 @@ if __name__ == "__main__":
     slow_rate = 100.
 
     state = robot.get_state()
-    goal_pos, goal_ori = state['ee_pos'], state['ee_ori']
+    goal_pos, goal_ori = state['ee_position'], state['ee_orientation']
 
     controller = OSHybridController(robot)
     robot.enable()
@@ -63,7 +63,7 @@ if __name__ == "__main__":
         now = time.time()
 
         state = robot.get_state()
-        ee_pos = state['ee_pos']
+        ee_pos = state['ee_position']
         wrench = robot.get_ft_sensor_wrench(robot.get_ft_sensor_joints()[-1], in_world_frame=True, ft_link='child')
         # print wrench
         if abs(wrench[2]) >= 10.:

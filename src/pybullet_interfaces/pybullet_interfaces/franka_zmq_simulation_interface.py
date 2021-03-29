@@ -126,15 +126,15 @@ class FrankaZMQSimulationInterface(object):
         :rtype: list of float
         """
         state_list = []
-        state_list.extend(list(state['joint_pos']))
-        state_list.extend(list(state['joint_vel']))
-        state_list.extend(list(state['joint_eff']))
-        state_list.extend(list(state['ee_pos']))
-        state_list.extend(quaternion.as_float_array(state['ee_ori']))
-        state_list.extend(list(state['ee_vel']))
-        state_list.extend(list(state['ee_omg']))
-        state_list.extend(list(state['tip_state']['force']))
-        state_list.extend(list(state['tip_state']['torque']))
+        state_list.extend(list(state['joint_positions']))
+        state_list.extend(list(state['joint_velocities']))
+        state_list.extend(list(state['joint_torques']))
+        state_list.extend(list(state['ee_position']))
+        state_list.extend(quaternion.as_float_array(state['ee_orientation']))
+        state_list.extend(list(state['ee_linear_velocity']))
+        state_list.extend(list(state['ee_angular_velocity']))
+        state_list.extend(list(state['ee_force']))
+        state_list.extend(list(state['ee_torque']))
         state_list.extend(state['jacobian'].flatten('F'))  # F for column-major
         state_list.extend(state['inertia'].flatten('F'))  # F for column-major
         return state_list

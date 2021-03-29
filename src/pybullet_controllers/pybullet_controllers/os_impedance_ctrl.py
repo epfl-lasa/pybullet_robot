@@ -22,14 +22,14 @@ class OSImpedanceController(OSControllerBase):
         task-space force, and then the corresponding joint torques.
         """
         state = self._robot.get_state()
-        curr_pos, curr_ori = state['ee_pos'], state['ee_ori']
+        curr_pos, curr_ori = state['ee_position'], state['ee_orientation']
 
         delta_pos = self._goal_pos - curr_pos.reshape([3, 1])
         delta_ori = quatdiff_in_euler(
             curr_ori, self._goal_ori).reshape([3, 1])
         # print goal_pos, curr_pos
 
-        curr_vel, curr_omg = state['ee_vel'], state['ee_omg']
+        curr_vel, curr_omg = state['ee_linear_velocity'], state['ee_angular_velocity']
         # print self._goal_pos, curr_pos
         # Desired task-space force using PD law
         F = np.vstack([self._P_pos.dot(delta_pos), self._P_ori.dot(delta_ori)]) - \
@@ -38,11 +38,11 @@ class OSImpedanceController(OSControllerBase):
 
         error = np.asarray([np.linalg.norm(delta_pos), np.linalg.norm(delta_ori)])
 
-        J = self._robot.get_jacobian(state['joint_pos'])
+        J = self._robot.get_jacobian(state['joint_positions'])
 
         # joint torques to be commanded
         return np.dot(J.T, F).flatten(), error
 
     def _initialise_goal(self):
         state = self._robot.get_state()
-        self.update_goal(state['ee_pos'], state['ee_ori'])
+        self.update_goal(state['ee_position'], state['ee_orientation'])

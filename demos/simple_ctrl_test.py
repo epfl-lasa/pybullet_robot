@@ -20,7 +20,7 @@ if __name__ == "__main__":
     slow_rate = 100.
 
     state = robot.get_state()
-    goal_pos, goal_ori = state['ee_pos'], state['ee_ori']
+    goal_pos, goal_ori = state['ee_position'], state['ee_orientation']
 
     controller = OSImpedanceController(robot)
     robot.enable()
@@ -37,7 +37,7 @@ if __name__ == "__main__":
         now = time.time()
 
         state = robot.get_state()
-        ee_pos = state['ee_pos']
+        ee_pos = state['ee_position']
 
         goal_pos[2] = z_traj[i]
 

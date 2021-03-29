@@ -119,13 +119,13 @@ class BulletRobot(BulletRobotDescription):
         ok = False
         if not all([lower_pos_lim <= joint_pos <= upper_pos_lim for lower_pos_lim, upper_pos_lim, joint_pos in
                     zip(self._joint_position_limits['lower'], self._joint_position_limits['upper'],
-                        state['joint_pos'])]):
+                        state['joint_positions'])]):
             message = "Joint position limits"
         elif any([abs(joint_vel) >= vel_limit for joint_vel, vel_limit in
-                  zip(state['joint_vel'], self._joint_velocity_limits)]):
+                  zip(state['joint_velocities'], self._joint_velocity_limits)]):
             message = "Joint velocity limits"
         elif any([abs(joint_effort) >= effort_limit for joint_effort, effort_limit in
-                  zip(state['joint_eff'], self._joint_effort_limits)]):
+                  zip(state['joint_torques'], self._joint_effort_limits)]):
             message = "Joint effort limits"
         else:
             return True
@@ -141,39 +141,36 @@ class BulletRobot(BulletRobotDescription):
                 joint space inertia tensor, end-effector position,
                 end-effector orientation, end-effector velocity (linear and angular),
                 end-effector force, end-effector torque
-        :rtype: dict: {'joint_pos': np.ndarray,
-                       'joint_vel': np.ndarray,
-                       'joint_eff': np.ndarray,
+        :rtype: dict: {'joint_positions': np.ndarray,
+                       'joint_velocities': np.ndarray,
+                       'joint_torques': np.ndarray,
                        'jacobian': np.ndarray,
                        'inertia': np.ndarray,
-                       'ee_pos': np.ndarray,
-                       'ee_ori': np.ndarray,
-                       'ee_vel': np.ndarray,
-                       'ee_omg': np.ndarray,
-                       'tip_state'['force']: np.ndarray,
-                       'tip_state'['torque']: np.ndarray,
+                       'ee_position': np.ndarray,
+                       'ee_orientation': np.ndarray,
+                       'ee_linear_velocity': np.ndarray,
+                       'ee_angular_velocity': np.ndarray,
+                       'ee_force': np.ndarray,
+                       'ee_torque': np.ndarray,
                        }
         """
 
         state = {}
-        state['joint_pos'], state['joint_vel'], _, state['joint_eff'] = self.get_joint_state()
-        state['jacobian'] = self.get_jacobian(state['joint_pos'])
-        state['inertia'] = self.get_inertia(state['joint_pos'])
+        state['joint_positions'], state['joint_velocities'], _, state['joint_torques'] = self.get_joint_state()
+        state['jacobian'] = self.get_jacobian(state['joint_positions'])
+        state['inertia'] = self.get_inertia(state['joint_positions'])
 
-        state['ee_pos'], state['ee_ori'], state['ee_vel'], state['ee_omg'] = self.get_ee_state()
+        state['ee_position'], state['ee_orientation'], state['ee_linear_velocity'], state[
+            'ee_angular_velocity'] = self.get_ee_state()
 
-        tip_state = {}
         if hasattr(self, "_ft_joints"):
             ft_joint_state = pb.getJointState(self._id, max(
                 self._ft_joints), physicsClientId=self._uid)
             ft = np.asarray(ft_joint_state[2])
         else:
             ft = [0.0] * 6
-
-        tip_state['force'] = ft[:3]
-        tip_state['torque'] = ft[3:]
-
-        state['tip_state'] = tip_state
+        state['ee_force'] = ft[:3]
+        state['ee_torque'] = ft[3:]
 
         return state
 
@@ -531,10 +528,10 @@ class BulletRobot(BulletRobotDescription):
 
     def _check_joint_command(self, joint_command, joint_indices=None):
         """
-        Check if joint command has correct lenght and joint indices.
+        Check if joint command has correct length and joint indices.
 
         :param joint_command: Desired joint command
-        :param joint_indices: Optional parameter specifing the commanded joints
+        :param joint_indices: Optional parameter specifying the commanded joints
         :type joint_command: list of float
         :type joint_indices: list of int
 

@@ -5,7 +5,7 @@ import numpy as np
 class BulletRobotDescription(object):
     """
     Bullet Robot Description for a robotic manipulator (tested only with the Franka Panda).
-    This is a collection of methods that gather and store static information from the robot descritption urdf
+    This is a collection of methods that gather and store static information from the robot description urdf
     such that this information only has to be requested from the pybullet physics engine once.
 
     Available methods (for usage, see documentation at function definition):
@@ -87,10 +87,6 @@ class BulletRobotDescription(object):
                               for x in zip(self._joint_position_limits['lower'],
                                            self._joint_position_limits['upper'],
                                            self._joint_velocity_limits, self._joint_effort_limits)]
-
-        # # by default, set FT sensor at last fixed joint
-        # self._ft_joints = [self._all_joints[-1]]
-        # self.set_ft_sensor_at(self._ft_joints[0])
 
         self._base_pose = {}
         if config is not None:
@@ -366,9 +362,6 @@ class BulletRobotDescription(object):
         """
         Get default joint positions of all movable joints.
 
-        :param joint_positions: default joint positions of movable joints
-        :type joint_positions: list of float
-
         :return: Default joint positions or False if they have not been set yet
         :rtype: list of float
         """
@@ -385,7 +378,7 @@ class BulletRobotDescription(object):
         pb.resetBasePositionAndOrientation(
             self._id, self._base_pose['position'], self._base_pose['orientation'], physicsClientId=self._uid)
 
-    def get_base_pos_ori(self):
+    def get_base_pose(self):
         """
         :return: Position [X,Y,Z] and orientation [X,Y,Z,W] of robot base.
         :rtype: list[float], list[float]

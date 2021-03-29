@@ -40,13 +40,13 @@ class OSHybridController(OSControllerBase):
         """
         ## MOTION CONTROL
         state = self._robot.get_state()
-        curr_pos, curr_ori = state['ee_pos'], state['ee_ori']
+        curr_pos, curr_ori = state['ee_position'], state['ee_orientation']
 
         delta_pos = self._goal_pos - curr_pos.reshape([3, 1])
         delta_ori = quatdiff_in_euler(
             curr_ori, self._goal_ori).reshape([3, 1])
 
-        curr_vel, curr_omg = state['ee_vel'], state['ee_omg']
+        curr_vel, curr_omg = state['ee_linear_velocity'], state['ee_angular_velocity']
 
         # Desired task-space motion control PD law
         F_motion = self._pos_dir.dot(np.vstack([self._P_pos.dot(delta_pos), self._P_ori.dot(delta_ori)]) - \
@@ -78,7 +78,7 @@ class OSHybridController(OSControllerBase):
                             np.linalg.norm(self._pos_dir[3:, 3:].dot(delta_ori)),
                             np.linalg.norm(delta_ft[3:]), np.linalg.norm(delta_ft[3:])])
 
-        J = self._robot.get_jacobian(state['joint_pos'])
+        J = self._robot.get_jacobian(state['joint_positions'])
 
         self._last_time = current_time
 
@@ -88,7 +88,7 @@ class OSHybridController(OSControllerBase):
             np.eye(7) - J.T.dot(np.linalg.pinv(J.T, rcond=1e-3)))
 
         cmd += null_space_filter.dot(
-            (np.array(self._robot._tuck) - state['joint_pos']).reshape([7, 1]))
+            (np.array(self._robot._tuck) - state['joint_positions']).reshape([7, 1]))
         # print null_space_filter.dot(
         # (self._robot._tuck-self._robot.angles()).reshape([7, 1]))
         # joint torques to be commanded
@@ -98,4 +98,4 @@ class OSHybridController(OSControllerBase):
         self._last_time = None
         self._I_term = np.zeros([6, 1])
         state = self._robot.get_state()
-        self.update_goal(state['ee_pos'], state['ee_ori'], np.zeros(3), np.zeros(3))
+        self.update_goal(state['ee_position'], state['ee_orientation'], np.zeros(3), np.zeros(3))
