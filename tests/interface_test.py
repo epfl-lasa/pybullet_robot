@@ -50,23 +50,23 @@ if __name__ == "__main__":
         # important to check that conventions (column-major/row-major, quaternion, twist
         # force/torque) are the same in the simulation interface (python) and the control (cpp)
         for i, key in enumerate(state):
-            if key is 'ee_ori':
+            if key == 'ee_ori':
                 state[key].w = 1
                 state[key].x = 0
                 state[key].y = 0.5
                 state[key].z = 0
-            elif key is 'tip_state':
+            elif key == 'tip_state':
                 for j, key2 in enumerate(state[key]):
                     state[key][key2] = (j + 1) * i * np.ones(state[key][key2].shape)
                 state[key]['force'][1] = 100.0
                 state[key]['torque'][2] = -100.0
             else:
                 state[key] = i * np.ones(state[key].shape)
-                if key is 'jacobian':
+                if key == 'jacobian':
                     state[key][1, 0] = 200.0
                     state[key][3, 3] = 150.0
                     state[key][4, 6] = 100.0
-                if key is 'inertia':
+                if key == 'inertia':
                     state[key][1, 0] = 250.0
                     state[key][3, 5] = 170.0
                     state[key][5, 6] = 10.
