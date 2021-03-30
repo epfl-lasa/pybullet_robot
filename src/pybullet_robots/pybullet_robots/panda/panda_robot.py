@@ -141,19 +141,19 @@ class PandaArm(BulletRobot):
         """
         self.set_joint_torques_cmd(cmd, self.get_movable_joints())
 
-    def position_ik(self, position, orientation=None):
-        """
-        :return: Joint positions for given end-effector pose obtained using bullet IK.
-        :rtype: np.ndarray
-
-        :param position: target end-effector position (X,Y,Z) in world frame
-        :param orientation: target end-effector orientation in quaternion format (w, x, y , z) in world frame
-
-        :type position: [float] * 3
-        :type orientation: [float] * 4
-
-        """
-        return self.inverse_kinematics(position, orientation)[0]
+    # def position_ik(self, position, orientation=None):
+    #     """
+    #     :return: Joint positions for given end-effector pose obtained using bullet IK.
+    #     :rtype: np.ndarray
+    #
+    #     :param position: target end-effector position (X,Y,Z) in world frame
+    #     :param orientation: target end-effector orientation in quaternion format (w, x, y , z) in world frame
+    #
+    #     :type position: [float] * 3
+    #     :type orientation: [float] * 4
+    #
+    #     """
+    #     return self.inverse_kinematics(position, orientation)[0]
 
     def set_sampling_rate(self, sampling_rate=100):
         """
