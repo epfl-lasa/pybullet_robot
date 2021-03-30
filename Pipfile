@@ -10,6 +10,7 @@ pybullet = "*"
 numba = "*"
 scipy = "*"
 zmq = "*"
+matplotlib = "*"
 pybullet-controllers = {path = "./src/pybullet_controllers"}
 pybullet-simulation = {path = "./src/pybullet_simulation"}
 pybullet-interfaces = {path = "./src/pybullet_interfaces"}
@@ -24,3 +25,4 @@ python_version = "3.8"
 simple_ctrl_test = "python3 demos/simple_ctrl_test.py"
 hyb_ctrl_test = "python3 demos/hyb_ctrl_test.py"
 zmq_interface_test = "python3 tests/interface_test.py"
+zmq_velocity_control = "python3 tests/velocity_control_test.py"

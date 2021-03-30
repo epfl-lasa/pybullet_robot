@@ -1,1 +1,2 @@
+from .bullet_robot_description import BulletRobotDescription
 from .bullet_robot import BulletRobot

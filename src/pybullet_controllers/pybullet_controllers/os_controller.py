@@ -18,7 +18,7 @@ class OSControllerBase(object):
         self._error_thresh = config['error_thresh']
         self._start_err = config['start_err']
 
-        self._robot.set_ctrl_mode('tor')
+        self._robot.set_control_mode('torque')
 
         self._run_ctrl = False
 
@@ -75,7 +75,7 @@ class OSControllerBase(object):
                 # command robot using the computed joint torques
                 self._robot.exec_torque_cmd(tau)
 
-                self._robot.step_if_not_rtsim()
+                pb.stepSimulation(self._robot._uid)
                 self._sim_time += self._sim_timestep
                 self._mutex.release()
 

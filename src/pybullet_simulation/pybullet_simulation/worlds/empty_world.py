@@ -15,6 +15,15 @@ class WorldObjects(object):
 
 
 class EmptyWorld(object):
+    """
+    The EmptyWorld class defines the objects in the simulation environment apart from the robot. Objects can be added
+    by their urdf and removed by their name given at creation.
+
+    Available methods (for usage, see documentation at function definition):
+        - add_object_from_urdf
+        - remove_objects
+        - add_PyB_models_path
+    """
 
     def __init__(self, uid, add_plane=False, gravity=[0, 0, -9.81]):
         """

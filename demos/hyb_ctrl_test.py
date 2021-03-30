@@ -34,16 +34,14 @@ if __name__ == "__main__":
 
     robot = PandaArm(robot_description=os.path.join(os.path.dirname(__file__), os.pardir, "models/panda_arm.urdf"),
                      uid=simulation.uid)
-    timeout = time.time() + 2
-    while time.time() < timeout:
-        robot.tuck()
-        simulation.step()
 
     slow_rate = 100.
 
-    goal_pos, goal_ori = robot.ee_pose()
+    state = robot.get_state()
+    goal_pos, goal_ori = state['ee_position'], state['ee_orientation']
 
     controller = OSHybridController(robot)
+    robot.enable()
 
     print("started")
 
@@ -64,8 +62,9 @@ if __name__ == "__main__":
     while i < z_traj.size:
         now = time.time()
 
-        ee_pos, _ = robot.ee_pose()
-        wrench = robot.get_ee_wrench(local=False)
+        state = robot.get_state()
+        ee_pos = state['ee_position']
+        wrench = robot.get_ft_sensor_wrench(robot.get_ft_sensor_joints()[-1], in_world_frame=True, ft_link='child')
         # print wrench
         if abs(wrench[2]) >= 10.:
             break
