@@ -505,15 +505,19 @@ class BulletRobot(BulletRobotDescription):
             forces=efforts, physicsClientId=self._uid)
         return True
 
-    def set_joint_torques_cmd(self, joint_torques, joint_indices=None):
+    def set_joint_torques_cmd(self, joint_torques, joint_indices=None, compensate_gravity=False, apply_damping=False):
         """
         Set joint torques of movable joints.
 
         :param joint_torques: Joint torque values
         :param joint_indices: Optional parameter, if different from None, then only the joint torques of the specified
                               joints are changed. Otherwise all movable joints are considered.
+        :param compensate_gravity: Boolean if gravity has to be compensated
+        :param apply_damping: Boolean if damping should be applied on joint torques
         :type joint_torques: list of float
         :type joint_indices: list of int
+        :type compensate_gravity: bool
+        :type apply_damping: bool
 
         :return: Boolean if the operation was successful.
         :rtype: bool
@@ -521,6 +525,18 @@ class BulletRobot(BulletRobotDescription):
         joint_indices = self._check_joint_command(joint_torques, joint_indices)
         if not joint_indices:
             return False
+
+        if compensate_gravity:
+            compensation = self.get_gravity_compensation()
+            joint_torques = [a + b for a, b in zip(joint_torques, compensation)]
+
+        # if apply_damping:
+        #     current_velocities = self.get_joint_velocities()
+        #     damping = [25.0, 25.0, 25.0, 25.0, 15.0, 15.0, 5.0]
+        #     damping = [a / 15 for a in damping]
+        #     print(joint_torques)
+        #     joint_torques = [a - b * c for a, b, c in zip(joint_torques, damping, current_velocities)]
+        #     print(joint_torques)
 
         pb.setJointMotorControlArray(
             self._id, joint_indices, controlMode=pb.TORQUE_CONTROL, forces=joint_torques, physicsClientId=self._uid)
@@ -566,3 +582,10 @@ class BulletRobot(BulletRobotDescription):
         else:
             print("Default joint positions not set yet.")
             return False
+
+    def get_gravity_compensation(self):
+        state = self.get_state()
+        joint_torques = pb.calculateInverseDynamics(self._id, state['joint_positions'].tolist(),
+                                                    state['joint_velocities'].tolist(), [0] * self._nb_movable_joints,
+                                                    self._uid)
+        return joint_torques
