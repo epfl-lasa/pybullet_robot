@@ -1,8 +1,8 @@
 import numpy as np
-from pybullet_simulation import Simulation
-from pybullet_simulation.worlds import EmptyWorld
-from pybullet_robots.panda import PandaArm
-from pybullet_controllers import OSImpedanceController
+from simulation import Simulation
+from simulation.worlds import EmptyWorld
+from robots.panda import PandaArm
+from controllers import OSImpedanceController
 import time
 import os
 

@@ -1,6 +1,6 @@
-from pybullet_simulation import Simulation
-from pybullet_simulation.worlds import EmptyWorld
-from pybullet_robots import BulletRobot
+from simulation import Simulation
+from simulation.worlds import EmptyWorld
+from robots import BulletRobot
 import time
 import os.path
 

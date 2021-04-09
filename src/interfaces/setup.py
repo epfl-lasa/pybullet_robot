@@ -4,11 +4,9 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="pybullet_simulation",
+    name="interfaces",
     version="0.1",
-    author="Dominic Reber",
-    author_email="dominic.reber@epfl.ch",
-    description="This package implements the PyBullet simulation",
+    description="This package implements communication interfaces for the PyBullet simulation and controllers (C++/ROS)",
     long_description=long_description,
     long_description_content_type="text/markdown",
     # url="https://github.com/pypa/sampleproject",

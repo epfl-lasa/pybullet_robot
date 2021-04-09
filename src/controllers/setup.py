@@ -4,9 +4,9 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="pybullet_robots",
+    name="controllers",
     version="0.1",
-    description="This package implements the base class for the PyBullet robots as well as the specific robots",
+    description="This package implements controllers for the PyBullet simulation",
     long_description=long_description,
     long_description_content_type="text/markdown",
     # url="https://github.com/pypa/sampleproject",
