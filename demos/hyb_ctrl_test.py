@@ -1,9 +1,9 @@
 from collections import deque
 import numpy as np
-from pybullet_simulation import Simulation
-from pybullet_simulation.worlds import EmptyWorld
-from pybullet_robots.panda import PandaArm
-from pybullet_controllers import OSHybridController
+from simulation import Simulation
+from simulation.worlds import EmptyWorld
+from robots.panda import PandaArm
+from controllers import OSHybridController
 import time
 import matplotlib.pyplot as plt
 import threading

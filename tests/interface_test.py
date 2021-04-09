@@ -1,9 +1,9 @@
 import numpy as np
-from pybullet_simulation import Simulation
-from pybullet_simulation.worlds import EmptyWorld
-from pybullet_robots.panda import PandaArm
+from simulation import Simulation
+from simulation.worlds import EmptyWorld
+from robots.panda import PandaArm
 import time
-from pybullet_interfaces.franka_zmq_simulation_interface import FrankaZMQSimulationInterface
+from interfaces.franka_zmq_simulation_interface import FrankaZMQSimulationInterface
 import os.path
 
 if __name__ == "__main__":
