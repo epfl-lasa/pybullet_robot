@@ -1,11 +1,4 @@
-import os
-import time
-
-import numpy as np
-from pybullet_robots import BulletRobot
-
-import logging
-from .panda_robot_config import ROBOT_CONFIG
+from ..bullet_robot import BulletRobot
 
 
 class PandaArm(BulletRobot):
