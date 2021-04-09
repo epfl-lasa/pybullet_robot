@@ -1,4 +1,4 @@
-# PyBullet Controllers
+# Controllers
 
 This package contains example implementations of controllers for the PyBullet Simulation.
 

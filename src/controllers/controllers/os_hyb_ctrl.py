@@ -1,7 +1,7 @@
 import numpy as np
-from pybullet_controllers.utils import quatdiff_in_euler
-from pybullet_controllers.os_controller import OSControllerBase
-from pybullet_controllers.ctrl_config import OSHybConfig
+from controllers.utils import quatdiff_in_euler
+from controllers.os_controller import OSControllerBase
+from controllers.ctrl_config import OSHybConfig
 
 
 class OSHybridController(OSControllerBase):
