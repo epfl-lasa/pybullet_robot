@@ -4,7 +4,7 @@
 
 ### Preparation
 
-If you dont have `pip3` and `pipenv` installed on your machine yet, do so:
+If you don't have `pip3` and `pipenv` installed on your machine yet, do so:
 
 ```bash
 sudo apt install python3-pip
@@ -96,3 +96,12 @@ Although, this package is structured as a ROS package, it can be used without RO
 - [_panda_robot_](https://github.com/justagist/panda_robot) : Python interface providing higher-level control of the
   robot integrated with its gripper, controller manager, coordinate frames manager, etc. It also provides access to the
   kinematics and dynamics of the robot using the [KDL library](http://wiki.ros.org/kdl).
+
+## virtualenv
+
+```console
+python3.8 -m pip install virtualenv
+python3.8 -m virtualenv venv
+source venv/bin/activate
+source install.sh
+```

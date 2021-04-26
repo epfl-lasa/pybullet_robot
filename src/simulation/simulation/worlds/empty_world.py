@@ -40,6 +40,7 @@ class EmptyWorld(object):
         self._uid = uid
         pb.setGravity(gravity[0], gravity[1], gravity[2], physicsClientId=self._uid)
         self._objects = WorldObjects()
+        self.add_PyB_models_path()
         if add_plane:
             self.add_object_from_urdf('plane', 'plane.urdf', [0, 0, 0], [0, 0, 0, 1])
 

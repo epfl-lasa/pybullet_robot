@@ -19,11 +19,13 @@ TAG="latest"
 CONTAINER_NAME="$(echo "${PWD##*/}" | tr _ -)"
 VOLUME_NAME="$(echo "${PWD##*/}" | tr _ -)_vol"
 
+BUILD_FLAGS=(--tag "${IMAGE_NAME}:${TAG}")
+
 if [ "$REBUILD" -eq 1 ]; then
-  DOCKER_BUILDKIT=1 docker build --no-cache . --tag $IMAGE_NAME
-else
-  DOCKER_BUILDKIT=1 docker build . --tag $IMAGE_NAME
+    BUILD_FLAGS+=(--no-cache)
 fi
+
+DOCKER_BUILDKIT=1 docker build "${BUILD_FLAGS[@]}" .
 
 docker container stop "$CONTAINER_NAME" >/dev/null 2>&1
 docker rm --force "$CONTAINER_NAME" >/dev/null 2>&1
