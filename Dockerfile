@@ -6,7 +6,7 @@ ENV QT_X11_NO_MITSHM 1
 RUN apt-get update && apt-get install -y \
     cmake \
     libgl1-mesa-glx \
-    sudo git \
+    sudo git nano \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
