@@ -36,7 +36,7 @@ if __name__ == "__main__":
 
     start = time.time()
     k = 0
-    while simulation.is_alive():
+    while simulation.is_alive() and interface.is_connected():
         now = time.time()
         state = robot.get_state()
 
