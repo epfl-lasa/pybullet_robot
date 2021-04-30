@@ -1,0 +1,3 @@
+<launch>
+  <node name="control" pkg="ros_control_loop" type="control_node" output="screen"/>
+</launch>
