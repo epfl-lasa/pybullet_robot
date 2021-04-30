@@ -23,6 +23,11 @@ class ZMQInterface(object):
         self.subscribers = {}
         self.publishers = {}
 
+    @staticmethod
+    def is_connected():
+        # TODO python bindings don't provide 'is_connected'...
+        return True
+
     def add_subscriber(self, subscriber_uri):
         """
         Add and initialize subscriber with a desired URI.

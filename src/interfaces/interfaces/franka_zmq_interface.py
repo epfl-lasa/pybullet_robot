@@ -48,6 +48,9 @@ class FrankaZMQInterface(object):
 
         self.data_types = {'d': 8}
 
+    def is_connected(self):
+        return self.zmq_interface.is_connected()
+
     def publish_robot_state(self, state):
         """
         Publish robot state to ZMQ socket.
