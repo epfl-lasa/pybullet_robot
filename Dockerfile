@@ -30,7 +30,7 @@ RUN pip3 install ./simulation ./robots
 FROM project-sources AS zmq-user
 
 COPY ./src/interfaces ./interfaces
-RUN pip3 install interfaces
+RUN pip3 install ./interfaces
 
 ARG UID=1000
 ARG GID=1000

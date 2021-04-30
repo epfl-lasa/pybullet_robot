@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
 NAME=$(echo "${PWD##*/}" | tr _ -)
-#MULTISTAGE_TARGET="zmq-user"
-MULTISTAGE_TARGET="ros-user"
+MULTISTAGE_TARGET="zmq-user"
+#MULTISTAGE_TARGET="ros-user"
 
 USE_NVIDIA_TOOLKIT=false
 [[ ${USE_NVIDIA_TOOLKIT} = true ]] && GPU_FLAG="--gpus all" || GPU_FLAG=""

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-#MULTISTAGE_TARGET="zmq-user"
-MULTISTAGE_TARGET="ros-user"
+MULTISTAGE_TARGET="zmq-user"
+#MULTISTAGE_TARGET="ros-user"
 
 REBUILD=0
 while getopts 'r' opt; do
