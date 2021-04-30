@@ -145,6 +145,7 @@ class BulletRobot(BulletRobotDescription):
         :rtype: BulletRobotState
         """
         state = BulletRobotState(self.get_nb_joints())
+        state.joint_names = self.get_joint_names()
         state.joint_positions, state.joint_velocities, _, state.joint_efforts = self.get_joint_state()
         state.jacobian = self.get_jacobian(state.joint_positions)
         state.inertia = self.get_inertia(state.joint_positions)

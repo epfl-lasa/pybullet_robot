@@ -3,6 +3,7 @@ import numpy as np
 
 class BulletRobotState:
     def __init__(self, nb_joints):
+        self.joint_names = ["joint" + str(i) for i in range(nb_joints)]
         self.joint_positions = np.zeros((nb_joints,))
         self.joint_velocities = np.zeros((nb_joints,))
         self.joint_efforts = np.zeros((nb_joints,))
@@ -16,7 +17,8 @@ class BulletRobotState:
         self.ee_torque = np.zeros((3,))
 
     def __str__(self):
-        return "Joint positions: " + str(self.joint_positions) + \
+        return "Joint names: " + self.joint_names + \
+               "Joint positions: " + str(self.joint_positions) + \
                "\nJoint velocities: " + str(self.joint_velocities) + \
                "\nJoint efforts: " + str(self.joint_efforts) + \
                "\nEE position: " + str(self.ee_position) + \
