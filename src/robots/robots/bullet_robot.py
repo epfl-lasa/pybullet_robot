@@ -3,6 +3,7 @@ import numpy as np
 import quaternion
 
 from .bullet_robot_description import BulletRobotDescription
+from .bullet_robot_state import BulletRobotState
 
 
 class BulletRobot(BulletRobotDescription):
@@ -111,7 +112,7 @@ class BulletRobot(BulletRobotDescription):
         Check if the current robot state is within the joint limits.
 
         :param state: State of the robot
-        :type: state: dict
+        :type: state: BulletRobotState
 
         :return ok: Boolean if robot state is okay
         :rtype ok: bool
@@ -119,13 +120,13 @@ class BulletRobot(BulletRobotDescription):
         ok = False
         if not all([lower_pos_lim <= joint_pos <= upper_pos_lim for lower_pos_lim, upper_pos_lim, joint_pos in
                     zip(self._joint_position_limits['lower'], self._joint_position_limits['upper'],
-                        state['joint_positions'])]):
+                        state.joint_positions)]):
             message = "Joint position limits"
         elif any([abs(joint_vel) >= vel_limit for joint_vel, vel_limit in
-                  zip(state['joint_velocities'], self._joint_velocity_limits)]):
+                  zip(state.joint_velocities, self._joint_velocity_limits)]):
             message = "Joint velocity limits"
         elif any([abs(joint_effort) >= effort_limit for joint_effort, effort_limit in
-                  zip(state['joint_torques'], self._joint_effort_limits)]):
+                  zip(state.joint_efforts, self._joint_effort_limits)]):
             message = "Joint effort limits"
         else:
             return True
@@ -136,32 +137,19 @@ class BulletRobot(BulletRobotDescription):
 
     def get_state(self):
         """
-        :return: Current robot state, as a dictionary, containing
+        :return: Current robot state, as a dataclass, containing
                 joint positions, velocities, efforts, jacobian,
                 joint space inertia tensor, end-effector position,
                 end-effector orientation, end-effector velocity (linear and angular),
                 end-effector force, end-effector torque
-        :rtype: dict: {'joint_positions': np.ndarray,
-                       'joint_velocities': np.ndarray,
-                       'joint_torques': np.ndarray,
-                       'jacobian': np.ndarray,
-                       'inertia': np.ndarray,
-                       'ee_position': np.ndarray,
-                       'ee_orientation': np.ndarray,
-                       'ee_linear_velocity': np.ndarray,
-                       'ee_angular_velocity': np.ndarray,
-                       'ee_force': np.ndarray,
-                       'ee_torque': np.ndarray,
-                       }
+        :rtype: BulletRobotState
         """
+        state = BulletRobotState(self.get_nb_joints())
+        state.joint_positions, state.joint_velocities, _, state.joint_efforts = self.get_joint_state()
+        state.jacobian = self.get_jacobian(state.joint_positions)
+        state.inertia = self.get_inertia(state.joint_positions)
 
-        state = {}
-        state['joint_positions'], state['joint_velocities'], _, state['joint_torques'] = self.get_joint_state()
-        state['jacobian'] = self.get_jacobian(state['joint_positions'])
-        state['inertia'] = self.get_inertia(state['joint_positions'])
-
-        state['ee_position'], state['ee_orientation'], state['ee_linear_velocity'], state[
-            'ee_angular_velocity'] = self.get_ee_state()
+        state.ee_position, state.ee_orientation, state.ee_linear_velocity, state.ee_angular_velocity = self.get_ee_state()
 
         if hasattr(self, "_ft_joints"):
             ft_joint_state = pb.getJointState(self._id, max(
@@ -169,8 +157,8 @@ class BulletRobot(BulletRobotDescription):
             ft = np.asarray(ft_joint_state[2])
         else:
             ft = [0.0] * 6
-        state['ee_force'] = ft[:3]
-        state['ee_torque'] = ft[3:]
+        state.ee_force = ft[:3]
+        state.ee_torque = ft[3:]
 
         return state
 
@@ -245,7 +233,7 @@ class BulletRobot(BulletRobotDescription):
 
     def get_joint_state(self, joint_id=None):
         """
-        Get joint state(s) (position, velocty, force, effort).
+        Get joint state(s) (position, velocity, force, effort).
 
         :param joint_id: Optional parameter, if different from None, then only the joint state of the desired joint is
                          returned (if it exists), otherwise the joint states of all joints are returned.
