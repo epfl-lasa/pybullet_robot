@@ -43,9 +43,9 @@ if __name__ == "__main__":
         # set unique values in all fields to check integrity of the communication because it's
         # important to check that conventions (column-major/row-major, quaternion, twist
         # force/torque) are the same in the simulation interface (python) and the control (cpp)
-        state.joint_positions = np.ones((robot.get_nb_joints(),))
-        state.joint_velocities = 2 * np.ones((robot.get_nb_joints(),))
-        state.joint_efforts = 3 * np.ones((robot.get_nb_joints(),))
+        state.joint_positions = np.ones((robot.get_nb_movable_joints(),))
+        state.joint_velocities = 2 * np.ones((robot.get_nb_movable_joints(),))
+        state.joint_efforts = 3 * np.ones((robot.get_nb_movable_joints(),))
         state.ee_position = 4 * np.ones((3,))
         state.ee_orientation.w = 1.0
         state.ee_orientation.y = 0.5
@@ -62,7 +62,8 @@ if __name__ == "__main__":
 
         interface.publish_robot_state(state)
         command = interface.get_command()
-        print(command)
+        if command:
+            print(command)
         # if interface.first_message_received:
         #     if interface.timeout_triggered:
         #         # TODO handle connection timeout
@@ -76,4 +77,4 @@ if __name__ == "__main__":
             time.sleep(sleep_time)
         k = k + 1
 
-        print("Average rate: ", k / (time.time() - start))
+        # print("Average rate: ", k / (time.time() - start))
