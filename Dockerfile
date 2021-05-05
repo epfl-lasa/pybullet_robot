@@ -24,4 +24,7 @@ COPY ./tests ./tests
 COPY ./install.sh ./install.sh
 RUN chmod +x ./install.sh && ./install.sh
 
+ENV NVIDIA_VISIBLE_DEVICES all
+ENV NVIDIA_DRIVER_CAPABILITIES graphics,utility,compute
+
 ENTRYPOINT ["bash"]
