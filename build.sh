@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+#MULTISTAGE_TARGET="zmq-user"
+MULTISTAGE_TARGET="ros-user"
+
 REBUILD=0
 while getopts 'r' opt; do
     case $opt in
@@ -11,9 +14,9 @@ done
 shift "$(( OPTIND - 1 ))"
 
 NAME=$(echo "${PWD##*/}" | tr _ -)
-TAG="latest"
 
-BUILD_FLAGS=(--tag "${NAME}:${TAG}")
+BUILD_FLAGS=(--target "${MULTISTAGE_TARGET}")
+BUILD_FLAGS+=(-t "${NAME}:${MULTISTAGE_TARGET}")
 
 if [ "$REBUILD" -eq 1 ]; then
     BUILD_FLAGS+=(--no-cache)
