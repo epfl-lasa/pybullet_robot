@@ -1,1 +1,1 @@
-from .franka_zmq_simulation_interface import FrankaZMQSimulationInterface
+from .franka_zmq_interface import FrankaZMQInterface
