@@ -32,7 +32,7 @@ class Simulation(object):
 
     def is_alive(self):
         """
-        Check if the physics server is still conntected
+        Check if the physics server is still connected
 
         :rtype: bool
         """
