@@ -67,7 +67,10 @@ ENV HOME /home/ros
 RUN mkdir -p ~/ros_ws/src
 
 RUN cd ~/ros_ws/src && /bin/bash -c "source /ros_entrypoint.sh; catkin_init_workspace"
-COPY ./pybullet_ros /home/ros/ros_ws/src/pybullet_ros
+WORKDIR ${HOME}/ros_ws/src
+RUN git clone https://github.com/frankaemika/franka_ros.git && mv franka_ros/franka_description ./franka_description \
+    && rm -r franka_ros
+COPY ./pybullet_ros ./pybullet_ros
 RUN cd ~/ros_ws && /bin/bash -c "source /ros_entrypoint.sh; catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3"
 
 # Change .bashrc

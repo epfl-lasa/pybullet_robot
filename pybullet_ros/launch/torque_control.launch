@@ -1,6 +1,10 @@
 <launch>
     <arg name="robot_type" default="franka"/>
+    <!--    <arg name="robot_urdf_path" default="$(find franka_description)/robots/panda_arm.urdf.xacro"/>-->
     <arg name="simulation_frequency" default="500"/>
+
+    <!--    <param name="robot_description"-->
+    <!--           command="$(find xacro)/xacro $(arg robot_urdf_path)"/>-->
 
     <node name="simulation" pkg="pybullet_ros" type="torque_control_node"
           args="$(arg robot_type) $(arg simulation_frequency)"

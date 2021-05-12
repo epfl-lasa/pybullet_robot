@@ -3,6 +3,7 @@ project(pybullet_ros)
 
 find_package(catkin REQUIRED COMPONENTS
     rospy
+    franka_description
     )
 
 catkin_python_setup()
