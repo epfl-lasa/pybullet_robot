@@ -574,7 +574,7 @@ class BulletRobot(BulletRobotDescription):
 
     def get_gravity_compensation(self):
         state = self.get_state()
-        joint_torques = pb.calculateInverseDynamics(self._id, state['joint_positions'].tolist(),
-                                                    state['joint_velocities'].tolist(), [0] * self._nb_movable_joints,
+        joint_torques = pb.calculateInverseDynamics(self._id, state.joint_positions.tolist(),
+                                                    state.joint_velocities.tolist(), [0] * self._nb_movable_joints,
                                                     self._uid)
         return joint_torques
