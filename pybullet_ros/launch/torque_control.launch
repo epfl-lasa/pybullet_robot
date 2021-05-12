@@ -1,0 +1,3 @@
+<launch>
+    <node name="simulation" pkg="pybullet_ros" type="torque_control_node" output="screen"/>
+</launch>

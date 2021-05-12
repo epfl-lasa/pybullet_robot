@@ -67,8 +67,7 @@ ENV HOME /home/ros
 RUN mkdir -p ~/ros_ws/src
 
 RUN cd ~/ros_ws/src && /bin/bash -c "source /ros_entrypoint.sh; catkin_init_workspace"
-#COPY ./ros_control_loop /home/ros/ros_ws/src/ros_control_loop
-#COPY ./pybullet_interfaces /home/ros/ros_ws/src/pybullet_interfaces
+COPY ./pybullet_ros /home/ros/ros_ws/src/pybullet_ros
 RUN cd ~/ros_ws && /bin/bash -c "source /ros_entrypoint.sh; catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3"
 
 # Change .bashrc
