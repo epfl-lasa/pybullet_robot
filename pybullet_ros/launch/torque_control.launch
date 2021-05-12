@@ -1,3 +1,8 @@
 <launch>
-    <node name="simulation" pkg="pybullet_ros" type="torque_control_node" output="screen"/>
+    <arg name="robot_type" default="franka"/>
+    <arg name="simulation_frequency" default="500"/>
+
+    <node name="simulation" pkg="pybullet_ros" type="torque_control_node"
+          args="$(arg robot_type) $(arg simulation_frequency)"
+          output="screen"/>
 </launch>

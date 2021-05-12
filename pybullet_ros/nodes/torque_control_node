@@ -3,6 +3,7 @@
 import os
 import time
 import signal
+import sys
 
 from robots import BulletRobot
 from simulation import Simulation
@@ -20,10 +21,18 @@ class SIGINTHandler:
 
 
 if __name__ == '__main__':
-    desired_frequency = 50.0
-    # create simulation object
-    simulation = Simulation(realtime_sim=False, realtime_sim_freq=desired_frequency)
+    if len(sys.argv) != 3 + 2:
+        print("Incorrect number of arguments")
+        exit(1)
 
+    if sys.argv[1] != "franka":
+        print("Only franka robot available")
+        exit(1)
+
+    desired_frequency = float(sys.argv[2])
+
+    # create simulation and interface objects
+    simulation = Simulation()
     interface = FrankaROSInterface()
 
     # load empty world and add table
@@ -59,6 +68,8 @@ if __name__ == '__main__':
         # print(command)
         if command:
             robot.set_joint_torques_cmd(command, compensate_gravity=True)
+        else:
+            robot.set_joint_torques_cmd([0] * robot.get_nb_movable_joints(), compensate_gravity=True)
 
         simulation.step()
         elapsed = time.time() - now
