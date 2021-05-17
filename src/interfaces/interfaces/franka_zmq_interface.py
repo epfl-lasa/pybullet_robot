@@ -19,7 +19,7 @@ class FrankaZMQInterface(object):
         - poll_command
     """
 
-    def __init__(self, state_uri="0.0.0.0:5550", command_uri="0.0.0.0:5551", command_timeout=0.5):
+    def __init__(self, state_uri="0.0.0.0:1601", command_uri="0.0.0.0:1602", command_timeout=0.5):
         """
         Constructor of the FrankaZMQInterface class, binds and publishes to the ZMQ sockets defined by
         their URIs.
@@ -131,15 +131,15 @@ class FrankaZMQInterface(object):
         :rtype: list of float
         """
         state_list = []
-        state_list.extend(state.joint_positions.tolist())
-        state_list.extend(state.joint_velocities.tolist())
-        state_list.extend(state.joint_efforts.tolist())
-        state_list.extend(state.ee_position.tolist())
+        state_list.extend(state.joint_positions)
+        state_list.extend(state.joint_velocities)
+        state_list.extend(state.joint_efforts)
+        state_list.extend(state.ee_position)
         state_list.extend(quaternion.as_float_array(state.ee_orientation))
-        state_list.extend(state.ee_linear_velocity.tolist())
-        state_list.extend(state.ee_angular_velocity.tolist())
-        state_list.extend(state.ee_force.tolist())
-        state_list.extend(state.ee_torque.tolist())
+        state_list.extend(state.ee_linear_velocity)
+        state_list.extend(state.ee_angular_velocity)
+        state_list.extend(state.ee_force)
+        state_list.extend(state.ee_torque)
         state_list.extend(state.jacobian.flatten('F'))  # F for column-major
         state_list.extend(state.inertia.flatten('F'))  # F for column-major
         return state_list
