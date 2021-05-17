@@ -9,8 +9,8 @@ import threading
 class FrankaROSInterface(object):
     def __init__(self):
         self.interface = ROSInterface()
-        self._joint_state_publisher = self.interface.add_publisher("~joint_state", JointState, 1)
-        self.interface.add_subscriber_callback("/control/command", String, self._command_callback)
+        self._joint_state_publisher = self.interface.add_publisher("/joint_states", JointState, 10)
+        self.interface.add_subscriber_callback("/torque_controller/command", Float64MultiArray, self._command_callback)
         self._seq = 0
         self._mutex = threading.Lock()
         self._latest_command = []

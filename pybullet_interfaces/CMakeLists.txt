@@ -15,6 +15,7 @@ include_directories(
 
 catkin_install_python(PROGRAMS
     nodes/simulation_node
+    nodes/torque_control_node
     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
     )
 
