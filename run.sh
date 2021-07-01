@@ -15,7 +15,7 @@ docker run \
   --rm \
   --net="host" \
   --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
-  --volume="$XAUTH:$XAUTH" \
-  --env XAUTHORITY="$XAUTH" \
+  --volume="${XAUTHORITY}:${XAUTHORITY}" \
+  --env XAUTHORITY="${XAUTHORITY}" \
   --env DISPLAY="${DISPLAY}" \
   "${NAME}:${MULTISTAGE_TARGET}"
