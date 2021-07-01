@@ -40,7 +40,7 @@ if __name__ == "__main__":
         state = robot.get_state()
 
         interface.publish_robot_state(state)
-        command = interface.get_command()
+        command = interface.get_command(robot.get_nb_movable_joints())
         if command:
             robot.set_joint_torques_cmd(command, compensate_gravity=True)
         else:
