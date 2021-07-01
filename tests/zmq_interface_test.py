@@ -61,7 +61,7 @@ if __name__ == "__main__":
         state.inertia[5, 6] = 10.0
 
         interface.publish_robot_state(state)
-        command = interface.get_command()
+        command = interface.get_command(robot.get_nb_movable_joints())
         if command:
             print(command)
         # if interface.first_message_received:

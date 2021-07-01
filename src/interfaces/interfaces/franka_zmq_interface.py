@@ -64,7 +64,7 @@ class FrankaZMQInterface(object):
         encoded_state = self._encode_message(self._get_state_as_list(state), 'd')
         return self.zmq_interface.send(self.state_uri, encoded_state)
 
-    def get_command(self):
+    def get_command(self, nb_joints):
         """
         Receive message from ZMQ socket and decode it into a command message. If no new messages have been received
         over a defined time horizon, a timeout is triggered. The command is available at self.current_command and the
@@ -74,7 +74,11 @@ class FrankaZMQInterface(object):
         :rtype: list of float
         """
         message = self.zmq_interface.poll(self.command_uri)
-        return self._decode_message(message, 'd') if message else None
+        if message:
+            decoded = self._decode_message(message, 'd')
+            return decoded[2 * nb_joints:3 * nb_joints]
+        else:
+            return None
         # if message:
         #     return self._decode_message(message, 'd')
         # else:
@@ -101,8 +105,9 @@ class FrankaZMQInterface(object):
         :return: Decoded message
         :rtype: Any
         """
+        # control_type = struct.unpack('Q', message[0:8])[0]
         return [struct.unpack(data_type, message[i:i + self.data_types[data_type]])[0] for i in
-                range(0, len(message), self.data_types[data_type])]
+                range(8, len(message), self.data_types[data_type])]
 
     @staticmethod
     def _encode_message(message, data_type):
