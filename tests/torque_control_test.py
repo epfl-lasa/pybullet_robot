@@ -2,14 +2,14 @@ from simulation import Simulation
 from simulation.worlds import EmptyWorld
 from robots import BulletRobot
 import time
-from interfaces.franka_zmq_simulation_interface import FrankaZMQSimulationInterface
+from interfaces import FrankaZMQInterface
 import os.path
 
 if __name__ == "__main__":
     # create interface with default state_uri and command_uri
-    interface = FrankaZMQSimulationInterface()
+    interface = FrankaZMQInterface()
 
-    desired_frequency = 1000.0
+    desired_frequency = 500.0
     # create simulation object
     simulation = Simulation(realtime_sim=False, realtime_sim_freq=desired_frequency)
 
@@ -39,14 +39,12 @@ if __name__ == "__main__":
         now = time.time()
         state = robot.get_state()
 
-        interface.send(state)
-        interface.poll_command()
-        if interface.first_message_received:
-            if interface.timeout_triggered:
-                robot.disable()
-            else:
-                command = interface.current_command
-        robot.set_joint_torques_cmd(command, compensate_gravity=True)
+        interface.publish_robot_state(state)
+        command = interface.get_command()
+        if command:
+            robot.set_joint_torques_cmd(command, compensate_gravity=True)
+        else:
+            robot.set_joint_torques_cmd([0] * 7, compensate_gravity=True)
 
         simulation.step()
 
