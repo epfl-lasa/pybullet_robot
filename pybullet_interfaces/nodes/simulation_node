@@ -1,0 +1,68 @@
+#!/usr/bin/env python
+
+import os
+import time
+
+import numpy as np
+from robots import BulletRobot
+from simulation import Simulation
+from simulation.worlds import EmptyWorld
+
+from pybullet_interfaces import FrankaROSInterface
+
+if __name__ == '__main__':
+    desired_frequency = 50.0
+    # create simulation object
+    simulation = Simulation(realtime_sim=False, realtime_sim_freq=desired_frequency)
+
+    interface = FrankaROSInterface()
+
+    # load empty world and add table
+    world = EmptyWorld(uid=simulation.uid, add_plane=True, gravity=[0, 0, -9.81])
+    world.add_object_from_urdf('table', 'table/table.urdf', position_xyz=[0.4, 0, 0],
+                               orientation_wxyz=[0, 0, -0.707, 0.707], fixed_base=True, scaling=0.5)
+
+    # create robot after adding models path
+    if not simulation.add_robot_models_path(os.path.join(os.path.dirname(__file__), os.pardir, "models")):
+        exit(1)
+    robot = BulletRobot(robot_urdf="panda_arm.urdf", enforce_joint_limits=True, uid=simulation.uid)
+    print(robot.get_joint_names())
+    # Test some bullet_robot_description methods
+
+    start = time.time()
+    k = 0
+    while simulation.is_alive() and interface.is_connected():
+        now = time.time()
+        state = robot.get_state()
+        # set unique values in all fields to check integrity of the communication because it's
+        # important to check that conventions (column-major/row-major, quaternion, twist
+        # force/torque) are the same in the simulation interface (python) and the control (cpp)
+        state.joint_positions = np.ones((robot.get_nb_movable_joints(),))
+        state.joint_velocities = 2 * np.ones((robot.get_nb_movable_joints(),))
+        state.joint_efforts = 3 * np.ones((robot.get_nb_movable_joints(),))
+        state.ee_position = 4 * np.ones((3,))
+        state.ee_orientation.w = 1.0
+        state.ee_orientation.y = 0.5
+        state.ee_force = 5 * np.ones((3,))
+        state.ee_torque = 6 * np.ones((3,))
+        state.ee_linear_velocity = 7 * np.ones((3,))
+        state.ee_angular_velocity = 8 * np.ones((3,))
+        state.jacobian[1, 0] = 250.0
+        state.jacobian[3, 5] = 250.0
+        state.jacobian[5, 6] = 250.0
+        state.inertia[1, 0] = 250.0
+        state.inertia[3, 5] = 170.0
+        state.inertia[5, 6] = 10.0
+
+        interface.publish_robot_state(state)
+        command = interface.get_command()
+        if command:
+            print(command)
+
+        elapsed = time.time() - now
+        sleep_time = (1. / desired_frequency) - elapsed
+        if sleep_time > 0.0:
+            time.sleep(sleep_time)
+        k = k + 1
+
+        # print("Average rate: ", k / (time.time() - start))

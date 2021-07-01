@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 NAME=$(echo "${PWD##*/}" | tr _ -)
-TAG="latest"
+MULTISTAGE_TARGET="zmq-user"
+#MULTISTAGE_TARGET="ros-user"
 
 USE_NVIDIA_TOOLKIT=false
 [[ ${USE_NVIDIA_TOOLKIT} = true ]] && GPU_FLAG="--gpus all" || GPU_FLAG=""
@@ -14,7 +15,7 @@ docker run \
   --rm \
   --net="host" \
   --volume="/tmp/.X11-unix:/tmp/.X11-unix:rw" \
-  --volume="$XAUTH:$XAUTH" \
-  --env XAUTHORITY="$XAUTH" \
+  --volume="${XAUTHORITY}:${XAUTHORITY}" \
+  --env XAUTHORITY="${XAUTHORITY}" \
   --env DISPLAY="${DISPLAY}" \
-  "${NAME}:${TAG}"
+  "${NAME}:${MULTISTAGE_TARGET}"

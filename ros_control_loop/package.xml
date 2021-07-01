@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>ros_control_loop</name>
+    <version>0.0.0</version>
+    <description>The ros_control_loop package</description>
+
+    <maintainer email="dominic.reber@epfl.ch">Dominic Reber</maintainer>
+
+    <license>BSD</license>
+
+    <author email="dominic.reber@epfl.ch">Dominic Reber</author>
+
+    <buildtool_depend>catkin</buildtool_depend>
+    <depend>rospy</depend>
+</package>

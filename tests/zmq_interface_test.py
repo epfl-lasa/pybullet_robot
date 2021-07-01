@@ -3,12 +3,12 @@ from simulation import Simulation
 from simulation.worlds import EmptyWorld
 from robots.panda import PandaArm
 import time
-from interfaces.franka_zmq_simulation_interface import FrankaZMQSimulationInterface
+from interfaces import FrankaZMQInterface
 import os.path
 
 if __name__ == "__main__":
     # create interface with default state_uri and command_uri
-    interface = FrankaZMQSimulationInterface()
+    interface = FrankaZMQInterface()
 
     simulation = Simulation(realtime_sim=False)
     simulation.add_PyB_models_path()
@@ -36,38 +36,40 @@ if __name__ == "__main__":
 
     start = time.time()
     k = 0
-    while simulation.is_alive():
+    while simulation.is_alive() and interface.is_connected():
         now = time.time()
         state = robot.get_state()
 
         # set unique values in all fields to check integrity of the communication because it's
         # important to check that conventions (column-major/row-major, quaternion, twist
         # force/torque) are the same in the simulation interface (python) and the control (cpp)
-        for i, key in enumerate(state):
-            if key == 'ee_orientation':
-                state[key].w = 1
-                state[key].x = 0
-                state[key].y = 0.5
-                state[key].z = 0
-            else:
-                state[key] = i * np.ones(state[key].shape)
-                if key == 'jacobian':
-                    state[key][1, 0] = 200.0
-                    state[key][3, 3] = 150.0
-                    state[key][4, 6] = 100.0
-                if key == 'inertia':
-                    state[key][1, 0] = 250.0
-                    state[key][3, 5] = 170.0
-                    state[key][5, 6] = 10.
+        state.joint_positions = np.ones((robot.get_nb_movable_joints(),))
+        state.joint_velocities = 2 * np.ones((robot.get_nb_movable_joints(),))
+        state.joint_efforts = 3 * np.ones((robot.get_nb_movable_joints(),))
+        state.ee_position = 4 * np.ones((3,))
+        state.ee_orientation.w = 1.0
+        state.ee_orientation.y = 0.5
+        state.ee_force = 5 * np.ones((3,))
+        state.ee_torque = 6 * np.ones((3,))
+        state.ee_linear_velocity = 7 * np.ones((3,))
+        state.ee_angular_velocity = 8 * np.ones((3,))
+        state.jacobian[1, 0] = 250.0
+        state.jacobian[3, 5] = 250.0
+        state.jacobian[5, 6] = 250.0
+        state.inertia[1, 0] = 250.0
+        state.inertia[3, 5] = 170.0
+        state.inertia[5, 6] = 10.0
 
-        interface.send(state)
-        command = interface.poll_command()
-        if interface.first_message_received:
-            if interface.timeout_triggered:
-                # TODO handle connection timeout
-                pass
-            else:
-                print(command)
+        interface.publish_robot_state(state)
+        command = interface.get_command()
+        if command:
+            print(command)
+        # if interface.first_message_received:
+        #     if interface.timeout_triggered:
+        #         # TODO handle connection timeout
+        #         pass
+        #     else:
+        #         print(command)
 
         elapsed = time.time() - now
         sleep_time = (1. / desired_frequency) - elapsed
@@ -75,4 +77,4 @@ if __name__ == "__main__":
             time.sleep(sleep_time)
         k = k + 1
 
-        print("Average rate: ", k / (time.time() - start))
+        # print("Average rate: ", k / (time.time() - start))
